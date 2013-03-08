@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AndroidThroughIntelliJ</string>
+    <string name="app_name">Sample Application</string>
+    <string name="explanation">This tests both the server and the app logic for using the PayByPhone API</string>
 </resources>
