@@ -20,7 +20,7 @@ public class MainActivity extends Activity {
     private Button getTokenButton;
     private Button payForCabButton;
     private TextView resultText;
-    private UrlForPaying someUrl;
+    private UrlForPaying paymentURL;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,8 +43,8 @@ public class MainActivity extends Activity {
                 String resourceUri = TOKEN_URI + "/?amount=12.34&phone=6045555555&yourpaymentref=AAA" ;
                 Response response = client.handle(new Request(Method.GET, resourceUri));
                 String urlJson = response.getEntityAsText();
-                someUrl = gson.fromJson(urlJson, UrlForPaying.class);
-                resultText.setText(someUrl.getUrl());
+                paymentURL = gson.fromJson(urlJson, UrlForPaying.class);
+                resultText.setText(paymentURL.getUrl());
             } catch (Exception e) {
                 resultText.setText(e.getMessage());
             }
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(someUrl.getUrl()));
+            intent.setData(Uri.parse(paymentURL.getUrl()));
             startActivity(intent);
             }
         });
