@@ -4,6 +4,72 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
         >
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+        <TextView android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".25"
+                  android:text="Phone:"
+                  android:gravity="right"/>
+        <EditText android:id="@+id/phoneInput"
+                  android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".75"
+                  android:text="6045556666"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+        <TextView android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".25"
+                  android:text="Amount:"
+                  android:gravity="right"/>
+        <EditText android:id="@+id/amountInput"
+                  android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".75"
+                  android:numeric="decimal"
+                  android:text="12.34"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+        <TextView android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".25"
+                  android:text="Ref:"
+                  android:gravity="right"/>
+        <EditText android:id="@+id/refInput"
+                  android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".75"
+                  android:text="A65432"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+        <TextView android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".25"
+                  android:text="Name:"
+                  android:gravity="right"/>
+        <EditText android:id="@+id/nameInput"
+                  android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".75"
+                  android:text="Peewee Herman"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+        <TextView android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".25"
+                  android:text="Email:"
+                  android:gravity="right"/>
+        <EditText android:id="@+id/emailInput"
+                  android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".75"
+                  android:text="peewee@funhouse.com"/>
+    </LinearLayout>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

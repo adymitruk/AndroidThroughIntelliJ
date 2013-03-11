@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import com.google.gson.Gson;
 import org.restlet.Client;
@@ -21,6 +22,11 @@ public class MainActivity extends Activity {
     private Button payForCabButton;
     private TextView resultText;
     private UrlForPaying paymentURL;
+    private EditText amountInput;
+    private EditText phoneInput;
+    private EditText refInput;
+    private EditText nameInput;
+    private EditText emailInput;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,11 @@ public class MainActivity extends Activity {
         payForCabButton = (Button) findViewById(R.id.startWebPage);
         getTokenButton = (Button) findViewById(R.id.tokenRequestButton);
         resultText = (TextView) findViewById(R.id.resultText);
+        amountInput = (EditText) findViewById(R.id.amountInput);
+        phoneInput = (EditText) findViewById(R.id.phoneInput);
+        refInput = (EditText) findViewById(R.id.refInput);
+        nameInput = (EditText) findViewById(R.id.nameInput);
+        emailInput = (EditText) findViewById(R.id.emailInput);
 
         getTokenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,7 +51,11 @@ public class MainActivity extends Activity {
             try {
                 Gson gson = new Gson();
                 Client client = new Client(Protocol.HTTPS);
-                String resourceUri = TOKEN_URI + "/?amount=12.34&phone=6045555555&yourpaymentref=AAA" ;
+                String resourceUri = TOKEN_URI + "/?amount=" + Uri.encode(amountInput.getText().toString()) +
+                        "&phone=" + Uri.encode(phoneInput.getText().toString()) +
+                        "&yourpaymentref=" + Uri.encode(refInput.getText().toString()) +
+                        "&name=" + Uri.encode(nameInput.getText().toString()) +
+                        "&email=" + Uri.encode(emailInput.getText().toString());
                 Response response = client.handle(new Request(Method.GET, resourceUri));
                 String urlJson = response.getEntityAsText();
                 paymentURL = gson.fromJson(urlJson, UrlForPaying.class);
