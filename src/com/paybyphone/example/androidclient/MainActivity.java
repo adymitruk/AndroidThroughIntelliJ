@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
     }
     private void writeLineResult(String text) { Log.v("PickACab", text); }
 
-    final String TOKEN_URI = "https://devpartner.api.paybyphone.com:6643/payments/v1/generatetoken";
+    final String TOKEN_URI = "https://devapi.paybyphone.com:11443/payments/v1/generatetoken";
     private UrlForPaying paymentURL;
     private Button getTokenButton;
     private Button payForCabButton;
