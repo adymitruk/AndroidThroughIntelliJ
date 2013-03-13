@@ -55,7 +55,7 @@
                   android:layout_width="0dip"
                   android:layout_height="wrap_content"
                   android:layout_weight=".75"
-                  android:text="Peewee Herman"/>
+                  android:text="Joe Smith"/>
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content">
@@ -68,7 +68,7 @@
                   android:layout_width="0dip"
                   android:layout_height="wrap_content"
                   android:layout_weight=".75"
-                  android:text="peewee@funhouse.com"/>
+                  android:text="jsmith@emailplace.com"/>
     </LinearLayout>
     <Button
             android:layout_width="wrap_content"
@@ -80,6 +80,12 @@
             android:layout_height="wrap_content"
             android:text="Pay for Cab"
             android:id="@+id/startWebPage" android:layout_gravity="center" android:singleLine="false"
+            android:layout_column="1"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Check Payment Status"
+            android:id="@+id/checkPaymentStatusButton" android:layout_gravity="center" android:singleLine="false"
             android:layout_column="1"/>
     <TextView
             android:layout_width="fill_parent"
