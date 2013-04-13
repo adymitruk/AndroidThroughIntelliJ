@@ -24,6 +24,8 @@ import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
 import org.restlet.ext.ssl.HttpsClientHelper;
 
+import java.util.UUID;
+
 public class MainActivity extends Activity {
     final String BASE_URI = "https://devapi.paybyphone.com:11443/";
     final String TOKEN_URI = BASE_URI + "payments/v1/generatetoken";
@@ -42,8 +44,11 @@ public class MainActivity extends Activity {
                 String urlJson = response.getEntityAsText();
                 paymentURL = new Gson().fromJson(urlJson, UrlForPaying.class);
             } catch (Exception e) {
-                writeLineResult("error type: " + e.getClass().toString());
-                writeLineResult("error message: " + e.getMessage());
+                String error1 = "error type: " + e.getClass().toString();
+                writeLineResult(error1);
+                String error2 = "error message: " + e.getMessage().toString();
+                writeLineResult(error2);
+                return error1 + "\r" + error2;
             }
             return paymentURL.getUrl();
         }
@@ -89,32 +94,38 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 getTokenButton.setEnabled(false);
                 String resourceUri = TOKEN_URI + "/?amount=" + Uri.encode(amountInput.getText().toString()) +
-                        "&phone=" + Uri.encode(phoneInput.getText().toString()) +
-                        "&yourpaymentref=" + Uri.encode(refInput.getText().toString()) +
-                        "&name=" + Uri.encode(nameInput.getText().toString()) +
-                        "&email=" + Uri.encode(emailInput.getText().toString());
+                    "&phone=" + Uri.encode(phoneInput.getText().toString()) +
+                    "&yourpaymentref=" + Uri.encode(paymentRefInput.getText().toString()) +
+                    "&name=" + Uri.encode(nameInput.getText().toString()) +
+                    "&country=" + Uri.encode(countryCodeInput.getText().toString()) +
+                    "&currency=" + Uri.encode(currencyInput.getText().toString()) +
+                    "&vendorid=" + Uri.encode(vendorIdInput.getText().toString()) +
+                    "&email=" + Uri.encode(emailInput.getText().toString());
                 new FetchUri(resourceUri).execute();
             }
         });
         payForCabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (paymentURL == null || paymentURL.getUrl() == null || paymentURL.getUrl() == "") {
-                    Toast.makeText(getApplicationContext(), "Please request a token first.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(paymentURL.getUrl()));
-                startActivity(intent);
+            if (paymentURL == null || paymentURL.getUrl() == null || paymentURL.getUrl().equals("")) {
+                Toast.makeText(getApplicationContext(), "Please request a token first.", Toast.LENGTH_LONG).show();
+                return;
             }
-        });
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(paymentURL.getUrl()));
+            startActivity(intent);
+        }});
         checkPaymentStatusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkPaymentStatusButton.setEnabled(false);
-                String resourceUri = PAYMENT_STATUS_URI + "/blah";
+                String resourceUri = PAYMENT_STATUS_URI + "/" + paymentRefInput.getText().toString();
                 new GetStatus(resourceUri).execute();
             }
+        });
+        generateNewRefButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { paymentRefInput.setText(UUID.randomUUID().toString()); }
         });
     }
 
@@ -128,12 +139,16 @@ public class MainActivity extends Activity {
         payForCabButton = (Button) findViewById(R.id.startWebPage);
         getTokenButton = (Button) findViewById(R.id.tokenRequestButton);
         checkPaymentStatusButton = (Button) findViewById(R.id.checkPaymentStatusButton);
+        generateNewRefButton = (Button) findViewById(R.id.generateNewRefButton);
         resultText = (TextView) findViewById(R.id.resultText);
         amountInput = (EditText) findViewById(R.id.amountInput);
         phoneInput = (EditText) findViewById(R.id.phoneInput);
-        refInput = (EditText) findViewById(R.id.refInput);
         nameInput = (EditText) findViewById(R.id.nameInput);
         emailInput = (EditText) findViewById(R.id.emailInput);
+        countryCodeInput = (EditText) findViewById(R.id.countryCodeInput);
+        currencyInput = (EditText) findViewById(R.id.currencyInput);
+        paymentRefInput = (EditText) findViewById(R.id.paymentRefInput);
+        vendorIdInput = (EditText) findViewById(R.id.vendorIdInput);
     }
 
     private void writeLineResult(String text) { Log.v("PickACab", text); }
@@ -143,10 +158,14 @@ public class MainActivity extends Activity {
     private Button getTokenButton;
     private Button payForCabButton;
     private Button checkPaymentStatusButton;
+    private Button generateNewRefButton;
     private TextView resultText;
     private EditText amountInput;
     private EditText phoneInput;
-    private EditText refInput;
     private EditText nameInput;
     private EditText emailInput;
+    private EditText countryCodeInput;
+    private EditText currencyInput;
+    private EditText paymentRefInput;
+    private EditText vendorIdInput;
 }

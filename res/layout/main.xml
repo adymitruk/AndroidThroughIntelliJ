@@ -36,19 +36,6 @@
         <TextView android:layout_width="0dip"
                   android:layout_height="wrap_content"
                   android:layout_weight=".25"
-                  android:text="Ref:"
-                  android:gravity="right"/>
-        <EditText android:id="@+id/refInput"
-                  android:layout_width="0dip"
-                  android:layout_height="wrap_content"
-                  android:layout_weight=".75"
-                  android:text="A65432"/>
-    </LinearLayout>
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content">
-        <TextView android:layout_width="0dip"
-                  android:layout_height="wrap_content"
-                  android:layout_weight=".25"
                   android:text="Name:"
                   android:gravity="right"/>
         <EditText android:id="@+id/nameInput"
@@ -70,6 +57,63 @@
                   android:layout_weight=".75"
                   android:text="jsmith@emailplace.com"/>
     </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+        <TextView android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".25"
+                  android:text="Country Code:"
+                  android:gravity="right"/>
+        <EditText android:id="@+id/countryCodeInput"
+                  android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".75"
+                  android:text="3"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+        <TextView android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".25"
+                  android:text="Currency:"
+                  android:gravity="right"/>
+        <EditText android:id="@+id/currencyInput"
+                  android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".75"
+                  android:text="GBP"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+        <TextView android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".25"
+                  android:text="Payment Ref:"
+                  android:gravity="right"/>
+        <EditText android:id="@+id/paymentRefInput"
+                  android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".75"
+                  android:text="aaaa-aaaaa-aaaaaaa-aaaaa-aaaaaa"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+        <TextView android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".25"
+                  android:text="Vendor ID:"
+                  android:gravity="right"/>
+        <EditText android:id="@+id/vendorIdInput"
+                  android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight=".75"
+                  android:text="705"/>
+    </LinearLayout>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generate New Reference"
+            android:id="@+id/generateNewRefButton" android:layout_gravity="center" android:layout_column="1"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
