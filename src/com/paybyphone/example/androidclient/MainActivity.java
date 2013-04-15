@@ -22,14 +22,17 @@ import org.restlet.Response;
 import org.restlet.data.Method;
 import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
-import org.restlet.ext.ssl.HttpsClientHelper;
+import org.restlet.ext.net.HttpClientHelper;
 
 import java.util.UUID;
 
+//import org.restlet.ext.net.HttpClientHelper;
+//import org.restlet.ext.ssl.HttpsClientHelper;
+
 public class MainActivity extends Activity {
-    final String BASE_URI = "https://devapi.paybyphone.com:11443/";
-    final String TOKEN_URI = BASE_URI + "payments/v1/generatetoken";
-    final String PAYMENT_STATUS_URI = BASE_URI + "payments/v1/status";
+    final String ORIGINAL_URI = "http://216.23.154.28:58881/";
+    final String TOKEN_URI = ORIGINAL_URI + "api/v1/generatetoken";
+    final String PAYMENT_STATUS_URI = ORIGINAL_URI + "api/v1/status";
 
     // Use AsyncTask to avoid using the UI thread to perform long running tasks such as network calls
     class FetchUri extends AsyncTask<Void, Void, String> {
@@ -39,7 +42,8 @@ public class MainActivity extends Activity {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                Response response = new Client(Protocol.HTTPS).handle(new Request(Method.GET, resourceUri));
+
+                Response response = new Client(Protocol.HTTP).handle(new Request(Method.GET, resourceUri));
                 if (!response.getStatus().isSuccess()) throw new Exception("Request failed");
                 String urlJson = response.getEntityAsText();
                 paymentURL = new Gson().fromJson(urlJson, UrlForPaying.class);
@@ -134,7 +138,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
 
         Engine.getInstance().getRegisteredClients().clear();
-        Engine.getInstance().getRegisteredClients().add(new HttpsClientHelper(null));
+        Engine.getInstance().getRegisteredClients().add(new HttpClientHelper(null));
 
         payForCabButton = (Button) findViewById(R.id.startWebPage);
         getTokenButton = (Button) findViewById(R.id.tokenRequestButton);
