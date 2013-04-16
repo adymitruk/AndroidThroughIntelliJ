@@ -71,8 +71,8 @@ public class MainActivity extends Activity {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                Response response = new Client(Protocol.HTTPS).handle(new Request(Method.GET, resourceUri));
-                if (!response.getStatus().isSuccess()) throw new Exception("Request failed");
+                Response response = new Client(Protocol.HTTP).handle(new Request(Method.GET, resourceUri));
+                if (!response.getStatus().isSuccess()) throw new Exception("Request failed due to: " + response.getStatus().getDescription());
                 String urlJson = response.getEntityAsText();
                 paymentStatus = new Gson().fromJson(urlJson, PaymentStatus.class);
             } catch (Exception e) {
