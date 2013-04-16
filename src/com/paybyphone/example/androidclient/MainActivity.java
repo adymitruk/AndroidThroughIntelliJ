@@ -76,8 +76,11 @@ public class MainActivity extends Activity {
                 String urlJson = response.getEntityAsText();
                 paymentStatus = new Gson().fromJson(urlJson, PaymentStatus.class);
             } catch (Exception e) {
-                writeLineResult("error type: " + e.getClass().toString());
-                writeLineResult("error message: " + e.getMessage());
+                String errorType = e.getClass().toString();
+                String message = e.getMessage();
+                writeLineResult("error type: " + errorType);
+                writeLineResult("error message: " + message);
+                return errorType + ": " + message;
             }
             return paymentStatus.getStatus();
         }
