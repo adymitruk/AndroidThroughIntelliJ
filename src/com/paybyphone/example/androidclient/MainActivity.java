@@ -68,12 +68,15 @@ public class MainActivity extends Activity {
         protected String doInBackground(Void... params) {
             try {
                 Response response = new Client(Protocol.HTTPS).handle(new Request(Method.GET, resourceUri));
-                if (!response.getStatus().isSuccess()) throw new Exception("Request failed");
+                if (!response.getStatus().isSuccess()) throw new Exception("Request failed due to: " + response.getStatus().getDescription());
                 String urlJson = response.getEntityAsText();
                 paymentStatus = new Gson().fromJson(urlJson, PaymentStatus.class);
             } catch (Exception e) {
-                writeLineResult("error type: " + e.getClass().toString());
-                writeLineResult("error message: " + e.getMessage());
+                String errorType = e.getClass().toString();
+                String message = e.getMessage();
+                writeLineResult("error type: " + errorType);
+                writeLineResult("error message: " + message);
+                return errorType + ": " + message;
             }
             return paymentStatus.getStatus();
         }
