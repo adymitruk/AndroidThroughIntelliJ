@@ -96,10 +96,22 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 getTokenButton.setEnabled(false);
+                String firstName = "";
+                String lastName = "";
+                String name = nameInput.getText().toString().trim();
+                try {
+                    firstName = name.split(" ")[0];
+                    lastName = name.split(" ")[1];
+                }
+                catch (Exception e)
+                {
+                    // don't fail if the name is not entered correctly
+                }
                 String resourceUri = TOKEN_URI + "/?amount=" + Uri.encode(amountInput.getText().toString()) +
                     "&phone=" + Uri.encode(phoneInput.getText().toString()) +
                     "&yourpaymentref=" + Uri.encode(paymentRefInput.getText().toString()) +
-                    "&name=" + Uri.encode(nameInput.getText().toString()) +
+                    "&firstname=" + Uri.encode(firstName) +
+                    "&lastname=" + Uri.encode(lastName) +
                     "&country=" + Uri.encode(countryCodeInput.getText().toString()) +
                     "&currency=" + Uri.encode(currencyInput.getText().toString()) +
                     "&vendorid=" + Uri.encode(vendorIdInput.getText().toString()) +
