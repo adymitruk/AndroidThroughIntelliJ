@@ -50,12 +50,14 @@ public class MainActivity extends Activity {
                 writeLineResult(error2);
                 return error1 + "\r" + error2;
             }
-            return paymentURL.getUrl();
+            String url = paymentURL.getUrl();
+            return url;
         }
 
         @Override
         protected void onPostExecute(String result) {
             resultText.setText(result);
+            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
             getTokenButton.setEnabled(true);
         }
     }
@@ -84,6 +86,7 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(String result) {
             resultText.setText(result);
+            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
             checkPaymentStatusButton.setEnabled(true);
         }
     }
@@ -140,7 +143,7 @@ public class MainActivity extends Activity {
         });
         generateNewRefButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { paymentRefInput.setText(UUID.randomUUID().toString()); }
+            public void onClick(View v) { paymentRefInput.setText(UUID.randomUUID().toString()); Toast.makeText(getApplicationContext(), paymentRefInput.getText(), Toast.LENGTH_SHORT);  }
         });
     }
 
