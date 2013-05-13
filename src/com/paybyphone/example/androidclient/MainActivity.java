@@ -19,27 +19,53 @@ import com.google.gson.Gson;
 import org.restlet.Client;
 import org.restlet.Request;
 import org.restlet.Response;
+import org.restlet.data.Form;
 import org.restlet.data.Method;
 import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
 import org.restlet.ext.ssl.HttpsClientHelper;
+import org.restlet.resource.ClientResource;
 
 import java.util.UUID;
 
 public class MainActivity extends Activity {
     final String BASE_URI = "https://devapi.paybyphone.com:11443/";
-    final String TOKEN_URI = BASE_URI + "payments/v1/generatetoken";
+    final String TOKEN_URI = BASE_URI + "payments/v1/tokens";
     final String PAYMENT_STATUS_URI = BASE_URI + "payments/v1/status";
 
     // Use AsyncTask to avoid using the UI thread to perform long running tasks such as network calls
     class FetchUri extends AsyncTask<Void, Void, String> {
-        private String resourceUri;
-        public FetchUri(String resourceUri) { this.resourceUri = resourceUri; }
+        private String postData;
+        public FetchUri(String resourceUri) { this.postData = resourceUri; }
 
         @Override
         protected String doInBackground(Void... params) {
             try {
-                Response response = new Client(Protocol.HTTPS).handle(new Request(Method.GET, resourceUri));
+
+                /*
+                post.setHeader("Accept", "application/json");
+                post.setHeader("User-Agent", "Apache-HttpClient/4.1 (java 1.5)");
+                post.setHeader("Host", "myhost.com");
+                post.setHeader("X-ApiKey","24AD8009-0ADF-4801-B4E2-9948FE132097");
+                List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+                nvps.add(new BasicNameValuePair("data[body]", this.postData));
+                AbstractHttpEntity ent;
+                ent = new UrlEncodedFormEntity(nvps, HTTP.UTF_8);
+                ent.setContentType("application/x-www-form-urlencoded; charset=UTF-8");
+                ent.setContentEncoding("UTF-8");
+                */
+                ClientResource clientResource = new ClientResource(TOKEN_URI);
+                Form headers = (Form)clientResource.getRequestAttributes().get("org.restlet.https.headers");
+                if (headers == null) {
+                    headers = new Form();
+                    clientResource.getRequestAttributes().put("org.restlet.https.headers", headers);
+                }
+                headers.add("X-ApiKey","24AD8009-0ADF-4801-B4E2-9948FE132097");
+                headers.add("Accept", "application/json");
+                headers.add("User-Agent", "Apache-HttpClient/4.1 (java 1.5)");
+                headers.add("Host", "myhost.com");
+                clientResource.post(postData);
+                Response response = clientResource.getResponse();
                 if (!response.getStatus().isSuccess()) throw new Exception("Request failed");
                 String urlJson = response.getEntityAsText();
                 paymentURL = new Gson().fromJson(urlJson, UrlForPaying.class);
@@ -110,14 +136,14 @@ public class MainActivity extends Activity {
                 {
                     // don't fail if the name is not entered correctly
                 }
-                String resourceUri = TOKEN_URI + "/?amount=" + Uri.encode(amountInput.getText().toString()) +
+                String resourceUri = "amount=" + Uri.encode(amountInput.getText().toString()) +
                     "&phone=" + Uri.encode(phoneInput.getText().toString()) +
                     "&yourpaymentref=" + Uri.encode(paymentRefInput.getText().toString()) +
                     "&firstname=" + Uri.encode(firstName) +
                     "&lastname=" + Uri.encode(lastName) +
                     "&country=" + Uri.encode(countryCodeInput.getText().toString()) +
                     "&currency=" + Uri.encode(currencyInput.getText().toString()) +
-                    "&vendorid=" + Uri.encode(vendorIdInput.getText().toString()) +
+                    //"&vendorid=" + Uri.encode(vendorIdInput.getText().toString()) +
                     "&email=" + Uri.encode(emailInput.getText().toString());
                 new FetchUri(resourceUri).execute();
             }
