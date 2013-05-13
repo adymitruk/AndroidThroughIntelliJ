@@ -16,30 +16,48 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
+
+import org.apache.http.*;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.*;
+import org.apache.http.client.entity.UrlEncodedFormEntity; 
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.restlet.Client;
 import org.restlet.Request;
 import org.restlet.Response;
+import org.restlet.data.Form;
 import org.restlet.data.Method;
 import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
 import org.restlet.ext.ssl.HttpsClientHelper;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
 
-import java.util.UUID;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
 
 public class MainActivity extends Activity {
-    final String BASE_URI = "https://devapi.paybyphone.com:11443/";
-    final String TOKEN_URI = BASE_URI + "payments/v1/generatetoken";
-    final String PAYMENT_STATUS_URI = BASE_URI + "payments/v1/status";
+    //final String BASE_URI = "https://devapi.paybyphone.com:11443/";
+	final String BASE_URI = "https://devpartner.api.paybyphone.com/Payments/";
+    final String TOKEN_URI = BASE_URI + "v1/tokens";
+    final String PAYMENT_STATUS_URI = BASE_URI + "v1/payments/{0}/status";
 
     // Use AsyncTask to avoid using the UI thread to perform long running tasks such as network calls
-    class FetchUri extends AsyncTask<Void, Void, String> {
-        private String resourceUri;
-        public FetchUri(String resourceUri) { this.resourceUri = resourceUri; }
+    class GetToken extends AsyncTask<Void, Void, String> {
+        private String postData;
+        public GetToken(String postData) { this.postData = postData; }
 
         @Override
         protected String doInBackground(Void... params) {
-            try {
-                Response response = new Client(Protocol.HTTPS).handle(new Request(Method.GET, resourceUri));
+            /*try {
+                Response response = new Client(Protocol.HTTPS).handle(new Request(Method.GET, postData));
                 if (!response.getStatus().isSuccess()) throw new Exception("Request failed");
                 String urlJson = response.getEntityAsText();
                 paymentURL = new Gson().fromJson(urlJson, UrlForPaying.class);
@@ -51,7 +69,30 @@ public class MainActivity extends Activity {
                 return error1 + "\r" + error2;
             }
             String url = paymentURL.getUrl();
-            return url;
+            return url;*/
+            
+        	HttpClient client = new DefaultHttpClient();
+        	HttpPost post = new HttpPost(TOKEN_URI);
+        	post.setHeader("Accept", "application/json");
+        	post.setHeader("User-Agent", "Apache-HttpClient/4.1 (java 1.5)");
+        	post.setHeader("Host", "myhost.com");
+        	post.setHeader("X-ApiKey","24AD8009-0ADF-4801-B4E2-9948FE132097");
+        	List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+        	nvps.add(new BasicNameValuePair("data[body]", this.postData));
+        	AbstractHttpEntity ent;
+			try {
+				ent = new UrlEncodedFormEntity(nvps, HTTP.UTF_8);
+				ent.setContentType("application/x-www-form-urlencoded; charset=UTF-8");
+	        	ent.setContentEncoding("UTF-8");
+	        	post.setEntity(ent);
+	        	post.setURI(new URI(TOKEN_URI));
+	        	HttpResponse response = client.execute(post);
+	        	
+	        	return "done"; 
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				return "error: " + e.getMessage();
+			}    
         }
 
         @Override
@@ -110,16 +151,16 @@ public class MainActivity extends Activity {
                 {
                     // don't fail if the name is not entered correctly
                 }
-                String resourceUri = TOKEN_URI + "/?amount=" + Uri.encode(amountInput.getText().toString()) +
+                String resourceUri = "amount=" + Uri.encode(amountInput.getText().toString()) +
                     "&phone=" + Uri.encode(phoneInput.getText().toString()) +
                     "&yourpaymentref=" + Uri.encode(paymentRefInput.getText().toString()) +
                     "&firstname=" + Uri.encode(firstName) +
                     "&lastname=" + Uri.encode(lastName) +
                     "&country=" + Uri.encode(countryCodeInput.getText().toString()) +
                     "&currency=" + Uri.encode(currencyInput.getText().toString()) +
-                    "&vendorid=" + Uri.encode(vendorIdInput.getText().toString()) +
+                    //"&vendorid=" + Uri.encode(vendorIdInput.getText().toString()) +
                     "&email=" + Uri.encode(emailInput.getText().toString());
-                new FetchUri(resourceUri).execute();
+                new GetToken(resourceUri).execute();
             }
         });
         payForCabButton.setOnClickListener(new View.OnClickListener() {
