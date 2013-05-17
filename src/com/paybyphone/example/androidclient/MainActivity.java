@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentMap;
 public class MainActivity extends Activity {
     final String BASE_URI = "https://devapi.paybyphone.com:11443/";
     final String TOKEN_URI = BASE_URI + "payments/v1/tokens";
-    final String PAYMENT_STATUS_URI = BASE_URI + "payments/v1/status";
+    final String PAYMENT_STATUS_URI = BASE_URI + "payments/v1/payments/%s/status";
 
     // Use AsyncTask to avoid using the UI thread to perform long running tasks such as network calls
     class FetchUri extends AsyncTask<Void, Void, String> {
@@ -106,15 +106,39 @@ public class MainActivity extends Activity {
     }
 
     class GetStatus extends AsyncTask<Void, Void, String> {
-        private String resourceUri;
+    	//headers.set("X-ApiKey","24AD8009-0ADF-4801-B4E2-9948FE132097");
+        
+    	private String resourceUri;
         GetStatus(String resourceUri) { this.resourceUri = resourceUri; }
 
         @Override
         protected String doInBackground(Void... params) {
             try {
-                Response response = new Client(Protocol.HTTPS).handle(new Request(Method.GET, resourceUri));
+                /*Response response = new Client(Protocol.HTTPS).handle(new Request(Method.GET, resourceUri));
                 if (!response.getStatus().isSuccess()) throw new Exception("Request failed due to: " + response.getStatus().getDescription());
                 String urlJson = response.getEntityAsText();
+                paymentStatus = new Gson().fromJson(urlJson, PaymentStatus.class);*/
+            	
+            	Client client = new Client(new Context(), Protocol.HTTPS);
+                client.getContext().getParameters().add("useForwardedForHeader", "false");
+                ClientResource clientResource = new ClientResource(resourceUri);
+                ConcurrentMap<String, Object> attr = clientResource.getRequest().getAttributes();
+                Series<Header> headers = (Series<Header>) attr.get(HeaderConstants.ATTRIBUTE_HEADERS);
+                if (headers == null) {
+                    headers = new Series<Header>(Header.class);
+                    Series<Header> prev = (Series<Header>) attr.putIfAbsent(HeaderConstants.ATTRIBUTE_HEADERS, headers);
+                    if (prev != null) headers = prev;
+                }
+                headers.set("X-ApiKey","24AD8009-0ADF-4801-B4E2-9948FE132097");
+
+                clientResource.setRequestEntityBuffering(true);
+                clientResource.setNext(client);
+                clientResource.setMethod(Method.GET);
+
+                clientResource.get();
+                Response response = clientResource.getResponse();
+                if (!response.getStatus().isSuccess()) throw new Exception("Request failed");
+                String urlJson = response.getEntityAsText(); 
                 paymentStatus = new Gson().fromJson(urlJson, PaymentStatus.class);
             } catch (Exception e) {
                 String errorType = e.getClass().toString();
@@ -181,7 +205,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 checkPaymentStatusButton.setEnabled(false);
-                String resourceUri = PAYMENT_STATUS_URI + "/" + paymentRefInput.getText().toString();
+                String resourceUri = String.format(PAYMENT_STATUS_URI, paymentRefInput.getText());
                 new GetStatus(resourceUri).execute();
             }
         });

@@ -1,9 +1,9 @@
 package com.paybyphone.example.androidclient;
 
 public class PaymentStatus {
-    private String status;
-
+    private String Status;
+    
     public String getStatus() {
-        return status;
+        return Status;
     }
 }
