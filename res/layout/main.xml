@@ -4,6 +4,12 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
         >
+<ScrollView android:isScrollContainer="true" android:layout_height="fill_parent" android:layout_width="fill_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+        >
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content">
         <TextView android:layout_width="0dip"
@@ -136,4 +142,5 @@
             android:layout_height="wrap_content"
             android:id="@+id/resultText" android:layout_column="0"/>
 </LinearLayout>
-
+</ScrollView>
+</LinearLayout>
